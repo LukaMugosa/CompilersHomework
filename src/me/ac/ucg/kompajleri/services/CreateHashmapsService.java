@@ -1,0 +1,86 @@
+package me.ac.ucg.kompajleri.services;
+
+import me.ac.ucg.kompajleri.Token;
+import me.ac.ucg.kompajleri.constants.DataTypesConstants;
+import me.ac.ucg.kompajleri.constants.OperatorsConstants;
+import me.ac.ucg.kompajleri.constants.TokenCodes;
+import me.ac.ucg.kompajleri.constants.TokenValues;
+
+import java.util.HashMap;
+
+public class CreateHashmapsService {
+
+    public static HashMap<String, Integer> createKeywordsMap() {
+        HashMap<String,Integer> keywords = new HashMap<>();
+        keywords.put("LET", TokenCodes.let_);
+        keywords.put("IN", TokenCodes.in_);
+        keywords.put("END", TokenCodes.end_);
+        keywords.put("IF", TokenCodes.if_);
+        keywords.put("THEN", TokenCodes.then_);
+        keywords.put("FI", TokenCodes.fi_);
+        keywords.put("ELSE", TokenCodes.else_);
+        keywords.put("WHILE", TokenCodes.while_);
+        keywords.put("FOR", TokenCodes.for_);
+        keywords.put("BREAK", TokenCodes.break_);
+        keywords.put("PRINT", TokenCodes.print_);
+        keywords.put("READINT", TokenCodes.readInteger_);
+        keywords.put("READDOUBLE", TokenCodes.readDouble_);
+        keywords.put("READBOOL", TokenCodes.readBoolean_);
+        keywords.put("READSTRING", TokenCodes.readString_);
+        return keywords;
+    }
+    public static HashMap<String, Integer> createDataTypesMap() {
+        HashMap<String,Integer> dataTypes = new HashMap<>();
+        dataTypes.put(DataTypesConstants.INTEGER, TokenCodes.integer_);
+        dataTypes.put(DataTypesConstants.DOUBLE, TokenCodes.double_);
+        dataTypes.put(DataTypesConstants.BOOLEAN, TokenCodes.bool_);
+        dataTypes.put(DataTypesConstants.STRING, TokenCodes.string_);
+        return dataTypes;
+    }
+    public static HashMap<String, Integer> createTokensMap() {
+        HashMap<String,Integer> tokensMap = new HashMap<>();
+        tokensMap.put("identifier", TokenCodes.identifier_);
+        tokensMap.put(TokenValues.plus_, TokenCodes.plus_);
+        tokensMap.put(TokenValues.minus_, TokenCodes.minus_);
+        tokensMap.put(TokenValues.mul_, TokenCodes.mul_);
+        tokensMap.put(TokenValues.div_, TokenCodes.div_);
+        tokensMap.put(TokenValues.mod_, TokenCodes.mod_);
+        tokensMap.put(TokenValues.less_, TokenCodes.less_);
+        tokensMap.put(TokenValues.lessOrEqual_, TokenCodes.lessOrEqual_);
+        tokensMap.put(TokenValues.greater_, TokenCodes.greater_);
+        tokensMap.put(TokenValues.greaterOrEqual_, TokenCodes.greaterOrEqual_);
+        tokensMap.put(TokenValues.assign_, TokenCodes.assign_);
+        tokensMap.put(TokenValues.equal_, TokenCodes.equal_);
+        tokensMap.put(TokenValues.notEqual_, TokenCodes.notEqual_);
+        tokensMap.put(TokenValues.and_, TokenCodes.and_);
+        tokensMap.put(TokenValues.or_, TokenCodes.or_);
+        tokensMap.put(TokenValues.not_, TokenCodes.not_);
+        tokensMap.put(TokenValues.semicolon_, TokenCodes.semicolon_);
+        tokensMap.put(TokenValues.comma_, TokenCodes.comma_);
+        tokensMap.put(TokenValues.period_, TokenCodes.period_);
+        tokensMap.put(TokenValues.leftParentheses_, TokenCodes.leftParentheses_);
+        tokensMap.put(TokenValues.rightParentheses_, TokenCodes.rightParentheses_);
+        tokensMap.put(TokenValues.leftCurlyBracket_, TokenCodes.leftCurlyBracket_);
+        tokensMap.put(TokenValues.rightCurlyBracket_, TokenCodes.rightCurlyBracket_);
+        return  tokensMap;
+    }
+    public static HashMap<String, Integer> createOperatorsMap() {
+        HashMap<String,Integer> operatorsMap = new HashMap<>();
+        operatorsMap.put(OperatorsConstants.plus_, TokenCodes.plus_);
+        operatorsMap.put(OperatorsConstants.minus_, TokenCodes.minus_);
+        operatorsMap.put(OperatorsConstants.mul_, TokenCodes.mul_);
+        operatorsMap.put(OperatorsConstants.div_, TokenCodes.div_);
+        operatorsMap.put(OperatorsConstants.mod_, TokenCodes.mod_);
+        operatorsMap.put(OperatorsConstants.less_, TokenCodes.less_);
+        operatorsMap.put(OperatorsConstants.lessOrEqual_, TokenCodes.lessOrEqual_);
+        operatorsMap.put(OperatorsConstants.greater_, TokenCodes.greater_);
+        operatorsMap.put(OperatorsConstants.greaterOrEqual_, TokenCodes.greaterOrEqual_);
+        operatorsMap.put(OperatorsConstants.equal_, TokenCodes.equal_);
+        operatorsMap.put(OperatorsConstants.notEqual_, TokenCodes.notEqual_);
+        operatorsMap.put(OperatorsConstants.and_, TokenCodes.and_);
+        operatorsMap.put(OperatorsConstants.or_, TokenCodes.or_);
+        operatorsMap.put(OperatorsConstants.assign_, TokenCodes.assign_);
+        return operatorsMap;
+    }
+
+}

@@ -127,14 +127,11 @@ public class Scanner {
         Token t = new Token();
         t.line = line;
         t.col = col;
-        switch (ch) {
-            case eofCh:
-                t.kind = TokenCodes.eof;
-                break;
-            default:
-                nextCh();
-                t.kind = TokenCodes.none;
-                break;
+        if (ch == eofCh) {
+            t.kind = TokenCodes.eof;
+        } else {
+            nextCh();
+            t.kind = TokenCodes.none;
         }
         return t;
     }

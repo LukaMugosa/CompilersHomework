@@ -1,5 +1,6 @@
 package me.ac.ucg.kompajleri;
 
+import me.ac.ucg.kompajleri.constants.RegexConstants;
 import me.ac.ucg.kompajleri.constants.TokenCodes;
 import me.ac.ucg.kompajleri.services.CreateHashmapsService;
 
@@ -11,26 +12,26 @@ public class Scanner {
     private static final char eol = '\n';
 
 
-//    private static final String key[] = { // sorted list of keywords
+    //    private static final String key[] = { // sorted list of keywords
 //            "LET", "IN", "END"
 //    };
     /*
-    * TODO: NAPRAVICEMO HASH MAPU KOJA CUVA "KEYWORD" => "TOKEN_CODE"
-    *  NA INICIJALIZACIJU SKENERA CEMO TU MAPU NAPUNITI KLJUCNIM RIJECIMA I KODOVIMA
-    */
-    private static HashMap<String, Integer> keywords;
+     * TODO: NAPRAVICEMO HASH MAPU KOJA CUVA "KEYWORD" => "TOKEN_CODE"
+     *  NA INICIJALIZACIJU SKENERA CEMO TU MAPU NAPUNITI KLJUCNIM RIJECIMA I KODOVIMA
+     */
+    public static HashMap<String, Integer> keywords;
     /*
-    * TODO: PRAVIMO MAPU TOKENA
-    * */
-    private static HashMap<String, Integer> tokens;
+     * TODO: PRAVIMO MAPU TOKENA
+     * */
+    public static HashMap<String, Integer> tokens;
     /*
-    * TODO: PRAVIMO MAPU TIPOVA PODATAKA
-    * */
-    private static HashMap<String, Integer> dataTypes;
+     * TODO: PRAVIMO MAPU TIPOVA PODATAKA
+     * */
+    public static HashMap<String, Integer> dataTypes;
     /*
-    * TODO: PRAVIMO MAPU OPERATORA
-    * */
-    private static HashMap<String, Integer> operators;
+     * TODO: PRAVIMO MAPU OPERATORA
+     * */
+    public static HashMap<String, Integer> operators;
 
 //    private static final int keyVal[] = {
 //            TokenCodes.let_, TokenCodes.in_, TokenCodes.end_
@@ -70,6 +71,54 @@ public class Scanner {
         operators = CreateHashmapsService.createOperatorsMap();
         nextCh();
     }
+
+    public static void scanString(Token token) {
+        // TODO: MAKE STRING SCANNING FUNCTIONALITY
+    }
+    private static Boolean isAValidDigit() {
+        return Character.isDigit(ch) ||
+                ch == '.' ||
+                ch == '+' ||
+                ch == '-' ||
+                Character.toString(ch).equalsIgnoreCase("x") ||
+                ('A' <= ch && ch <= 'F') ||
+                ('a' <= ch && ch <= 'f');
+    }
+
+    private static Integer setIntValue(Token token) {
+        return token.string.startsWith("0X") || token.string.startsWith("0x") ?
+                Integer.parseInt(token.string.substring(2), 16)
+                :
+                Integer.parseInt(token.string);
+    }
+
+    private static void checkDigitTokenValidity(Token token){
+        if(
+            token.string.matches(RegexConstants.intRegex) ||
+            token.string.matches(RegexConstants.hexRegex)
+        ){
+            token.kind = TokenCodes.integerConstant_;
+            token.valForInt = setIntValue(token);
+        }else if(token.string.matches(RegexConstants.doubleRegex)){
+            token.kind = TokenCodes.doubleConstant_;
+            token.valForDouble = Double.parseDouble(token.string);
+        }else{
+            token.kind = TokenCodes.none;
+            System.out.println("An error occurred while trying to scan the file on line " + line + ", col" + col + " .");
+            System.out.println("Number constant is invalid!");
+        }
+    }
+
+    public static void scanDigit(Token token) {
+        token.string = Character.toString(ch);
+        nextCh();
+        while (isAValidDigit()) {
+            token.string = token.string.concat(Character.toString(ch));
+            nextCh();
+        }
+        checkDigitTokenValidity(token);
+    }
+
 
     //---------- Return next input token
     public static Token next() {

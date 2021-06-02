@@ -75,13 +75,13 @@ public class Scanner {
     public static void scanString(Token token) {
         nextCh();
         token.string = "";
-        while(ch != '\n' && ch != '\"') {
+        while (ch != '\n' && ch != '\"') {
             token.string = token.string.concat(Character.toString(ch));
             nextCh();
         }
-        if(ch == '\"')
+        if (ch == '\"')
             token.kind = TokenCodes.stringConstant_;
-        else{
+        else {
             token.kind = TokenCodes.none;
             Parser.errors++;
             System.out.println("An error occurred while trying to scan the file on line " + line + ", col" + col + " .");
@@ -90,6 +90,7 @@ public class Scanner {
         }
         nextCh();
     }
+
     private static Boolean isAValidDigit() {
         return Character.isDigit(ch) ||
                 ch == '.' ||
@@ -107,17 +108,17 @@ public class Scanner {
                 Integer.parseInt(token.string);
     }
 
-    private static void checkDigitTokenValidity(Token token){
-        if(
-            token.string.matches(RegexConstants.intRegex) ||
-            token.string.matches(RegexConstants.hexRegex)
-        ){
+    private static void checkDigitTokenValidity(Token token) {
+        if (
+                token.string.matches(RegexConstants.intRegex) ||
+                        token.string.matches(RegexConstants.hexRegex)
+        ) {
             token.kind = TokenCodes.integerConstant_;
             token.valForInt = setIntValue(token);
-        }else if(token.string.matches(RegexConstants.doubleRegex)){
+        } else if (token.string.matches(RegexConstants.doubleRegex)) {
             token.kind = TokenCodes.doubleConstant_;
             token.valForDouble = Double.parseDouble(token.string);
-        }else{
+        } else {
             token.kind = TokenCodes.none;
             System.out.println("An error occurred while trying to scan the file on line " + line + ", col" + col + " .");
             System.out.println("Number constant is invalid!");
@@ -137,56 +138,118 @@ public class Scanner {
     public static void recognizeTokenKind(Token token) {
         token.string = Character.toString(ch);
         nextCh();
-        while(Character.isLetterOrDigit(ch) || ch == '_'){
+        while (Character.isLetterOrDigit(ch) || ch == '_') {
             token.string = token.string.concat(Character.toString(ch));
             nextCh();
         }
-        if(
-            token.string.compareTo("true") == 0 ||
-            token.string.compareTo("false") == 0
-        )
-        {
+        if (
+                token.string.compareTo("true") == 0 ||
+                token.string.compareTo("false") == 0
+        ) {
             token.kind = TokenCodes.boolConstant_;
         }
 
         keywords.keySet()
                 .forEach((keyword) -> {
-                    if(token.string.compareTo(keyword) == 0){
-                        if(token.string.startsWith("READ")){
-                            if(ch == '(') {
+                    if (token.string.compareTo(keyword) == 0) {
+                        if (token.string.startsWith("READ")) {
+                            if (ch == '(') {
                                 nextCh();
-                                if(ch == ')'){
+                                if (ch == ')') {
                                     nextCh();
                                     token.kind = keywords.get(keyword);
-                                }else{
+                                } else {
                                     System.out.println("An error occurred while trying to scan the file on line " + line + ", col" + col + " .");
                                     System.out.println("Read operation is invalid!");
                                     System.out.println("Missing closing bracket!");
                                     token.kind = TokenCodes.none;
                                 }
-                                return;
-                            }else{
+                            } else {
                                 System.out.println("An error occurred while trying to scan the file on line " + line + ", col" + col + " .");
                                 System.out.println("Read operation is invalid!");
                                 System.out.println("Missing opening bracket!");
                                 token.kind = TokenCodes.none;
-                                return;
                             }
-                        }else{
+                        } else {
                             token.kind = keywords.get(keyword);
-                            return;
                         }
+                        return;
                     }
                 });
 
         dataTypes.keySet()
                 .forEach((dataType) -> {
-                    if(token.string.compareTo(dataType) == 0){
+                    if (token.string.compareTo(dataType) == 0) {
                         token.kind = dataTypes.get(dataType);
                         return;
                     }
                 });
         token.kind = TokenCodes.identifier_;
+    }
+
+    private static void checkForCommentOrDivision(Token token, String s) {
+        nextCh();
+        if (ch == '/') {
+            nextCh();
+            while (ch != eol && ch != eofCh) nextCh();
+            nextCh();
+            token = null;
+        } else if (ch == '*') {
+            char prev;
+            nextCh();
+            while (ch != eofCh && ch != '/') {
+                prev = ch;
+                nextCh();
+                if (ch == '/') {
+                    if (prev == '*') {
+                        break;
+                    } else
+                        nextCh();
+                    while (ch == '/') nextCh();
+                }
+            }
+            if (ch == eofCh) {
+                token.kind = TokenCodes.none;
+            } else {
+                nextCh();
+            }
+            token = null;
+        } else {
+            token.kind = TokenCodes.div_;
+            token.string = s;
+        }
+    }
+
+    public static void checkForLessOrLessEqual(Token token, String s) {
+        nextCh();
+        if (ch == '=') {
+            nextCh();
+            s = s.concat("=");
+        }
+        token.kind = tokens.get(s);
+        token.string = s;
+    }
+
+    public static void checkForAmpersand(Token token) {
+        nextCh();
+        if (ch == '&') {
+            nextCh();
+            token.kind = TokenCodes.and_;
+            token.string = "&&";
+        } else {
+            token.kind = TokenCodes.none;
+        }
+    }
+
+    public static void checkForPipe(Token token) {
+        nextCh();
+        if (ch == '|') {
+            nextCh();
+            token.kind = TokenCodes.or_;
+            token.string = "||";
+        } else {
+            token.kind = TokenCodes.none;
+        }
     }
 
     //---------- Return next input token
@@ -196,11 +259,29 @@ public class Scanner {
         Token t = new Token();
         t.line = line;
         t.col = col;
-        if (ch == eofCh) {
-            t.kind = TokenCodes.eof;
+        if (Character.isLetter(ch)) {
+            recognizeTokenKind(t);
+        } else if (Character.isDigit(ch)) {
+            scanDigit(t);
         } else {
-            nextCh();
-            t.kind = TokenCodes.none;
+            String stringFromCharacter = Character.toString(ch);
+            switch (ch) {
+                case '\"' -> scanString(t);
+                case '+', '-', '*', ';', ',', '.', '(', ')', '%', '{', '}' -> {
+                    nextCh();
+                    t.kind = tokens.get(stringFromCharacter);
+                    t.string = stringFromCharacter;
+                }
+                case '/' -> checkForCommentOrDivision(t, stringFromCharacter);
+                case '<', '>', '=', '!' -> checkForLessOrLessEqual(t, stringFromCharacter);
+                case '&' -> checkForAmpersand(t);
+                case '|' -> checkForPipe(t);
+                case eofCh -> t.kind = TokenCodes.eof;
+                default -> {
+                    nextCh();
+                    t.kind = TokenCodes.none;
+                }
+            }
         }
         return t;
     }

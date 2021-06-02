@@ -73,7 +73,22 @@ public class Scanner {
     }
 
     public static void scanString(Token token) {
-        // TODO: MAKE STRING SCANNING FUNCTIONALITY
+        nextCh();
+        token.string = "";
+        while(ch != '\n' && ch != '\"') {
+            token.string = token.string.concat(Character.toString(ch));
+            nextCh();
+        }
+        if(ch == '\"')
+            token.kind = TokenCodes.stringConstant_;
+        else{
+            token.kind = TokenCodes.none;
+            Parser.errors++;
+            System.out.println("An error occurred while trying to scan the file on line " + line + ", col" + col + " .");
+            System.out.println("Invalid string format!");
+            System.out.println("Either string contains a new line, or is not properly formatted!");
+        }
+        nextCh();
     }
     private static Boolean isAValidDigit() {
         return Character.isDigit(ch) ||
@@ -119,6 +134,60 @@ public class Scanner {
         checkDigitTokenValidity(token);
     }
 
+    public static void recognizeTokenKind(Token token) {
+        token.string = Character.toString(ch);
+        nextCh();
+        while(Character.isLetterOrDigit(ch) || ch == '_'){
+            token.string = token.string.concat(Character.toString(ch));
+            nextCh();
+        }
+        if(
+            token.string.compareTo("true") == 0 ||
+            token.string.compareTo("false") == 0
+        )
+        {
+            token.kind = TokenCodes.boolConstant_;
+        }
+
+        keywords.keySet()
+                .forEach((keyword) -> {
+                    if(token.string.compareTo(keyword) == 0){
+                        if(token.string.startsWith("READ")){
+                            if(ch == '(') {
+                                nextCh();
+                                if(ch == ')'){
+                                    nextCh();
+                                    token.kind = keywords.get(keyword);
+                                }else{
+                                    System.out.println("An error occurred while trying to scan the file on line " + line + ", col" + col + " .");
+                                    System.out.println("Read operation is invalid!");
+                                    System.out.println("Missing closing bracket!");
+                                    token.kind = TokenCodes.none;
+                                }
+                                return;
+                            }else{
+                                System.out.println("An error occurred while trying to scan the file on line " + line + ", col" + col + " .");
+                                System.out.println("Read operation is invalid!");
+                                System.out.println("Missing opening bracket!");
+                                token.kind = TokenCodes.none;
+                                return;
+                            }
+                        }else{
+                            token.kind = keywords.get(keyword);
+                            return;
+                        }
+                    }
+                });
+
+        dataTypes.keySet()
+                .forEach((dataType) -> {
+                    if(token.string.compareTo(dataType) == 0){
+                        token.kind = dataTypes.get(dataType);
+                        return;
+                    }
+                });
+        token.kind = TokenCodes.identifier_;
+    }
 
     //---------- Return next input token
     public static Token next() {

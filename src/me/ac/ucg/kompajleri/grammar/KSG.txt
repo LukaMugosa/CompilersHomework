@@ -1,0 +1,46 @@
+Program        	-> LET Declarations IN CommandSequence END
+Declarations	-> Decl+
+Decl		    -> Type ident ;
+Type		    -> integer |  bool | string | double
+
+CommandSequence	-> { Stmt+ }
+Stmt		    -> IfStmt  | WhileStmt |  ForStmt |
+                   BreakStmt  | PrintStmt | AssignmentExpr ; | ExprNum_2 ;
+
+IfStmt		    -> IF ( ExprNum_2 ) CommandSequence IfStmtEnd
+IfStmtEnd	    -> ELSE CommandSequence FI | FI
+WhileStmt       -> WHILE ( ExprNum_2 ) CommandSequence
+ForStmt		    -> FOR ( AssignmentExpr ; ExprNum_2 ; AssignmentExpr ) CommandSequence
+BreakStmt	    -> BREAK ;
+PrintStmt	    -> PRINT (ExprNum_2) ;
+
+AssignmentExpr	-> ident = ExprNum_2
+
+ExprNum_2		-> ExprNum_3
+
+ExprNum_2_Prim		-> LogOp ExprNum_3 ExprNum_2_Prim | eps
+LogOp	        -> || | &&
+
+ExprNum_3		-> ExprNum_4 ENDEXPRNUM_3
+ENDEXPRNUM_3	-> EqualityOp ExprNum_4 | eps
+EqualityOp  	-> == | !=
+
+ExprNum_4		-> ExprNum_5 ENDEXPRNUM_4
+ENDEXPRNUM_4	-> ComparisonOp ExprNum_5 | eps
+ComparisonOp	-> < | <= | > | >=
+
+ExprNum_5		-> ExprNum_6 ExprNum_5_Prim
+ExprNum_5_Prim  -> ADD ExprNum_6 ExprNum_5_Prim | eps
+ADD		        -> + | -
+
+ExprNum_6		-> ExprNum_7 ExprNum_6_Prim
+ExprNum_6_Prim	-> MUL ExprNum_7 ExprNum_6_Prim | eps
+MUL		        -> * | / | %
+
+ExprNum_7 		-> ! ExprNum_8 | - ExprNum_8 | ExprNum_8
+
+ExprNum_8		-> Const | ident | ( ExprNum_2 ) | READINT ( ) | READSTRING ( ) | READDOUBLE (  ) |
+				READBOOL ( )
+
+
+Const 	        -> integerConst | booleanConst | stringConst | doubleConst

@@ -111,7 +111,7 @@ public class Scanner {
     private static void checkDigitTokenValidity(Token token) {
         if (
                 token.string.matches(RegexConstants.intRegex) ||
-                        token.string.matches(RegexConstants.hexRegex)
+                token.string.matches(RegexConstants.hexRegex)
         ) {
             token.kind = TokenCodes.integerConstant_;
             token.valForInt = setIntValue(token);
@@ -149,51 +149,52 @@ public class Scanner {
             token.kind = TokenCodes.boolConstant_;
         }
 
-        keywords.keySet()
-                .forEach((keyword) -> {
-                    if (token.string.compareTo(keyword) == 0) {
-                        if (token.string.startsWith("READ")) {
-                            if (ch == '(') {
-                                nextCh();
-                                if (ch == ')') {
-                                    nextCh();
-                                    token.kind = keywords.get(keyword);
-                                } else {
-                                    System.out.println("An error occurred while trying to scan the file on line " + line + ", col" + col + " .");
-                                    System.out.println("Read operation is invalid!");
-                                    System.out.println("Missing closing bracket!");
-                                    token.kind = TokenCodes.none;
-                                }
-                            } else {
-                                System.out.println("An error occurred while trying to scan the file on line " + line + ", col" + col + " .");
-                                System.out.println("Read operation is invalid!");
-                                System.out.println("Missing opening bracket!");
-                                token.kind = TokenCodes.none;
-                            }
+        for (String keyword : keywords.keySet()) {
+            if (token.string.compareTo(keyword) == 0) {
+                if (token.string.startsWith("READ")) {
+                    if (ch == '(') {
+                        nextCh();
+                        if (ch == ')') {
+                            nextCh();
+                            token.kind = keywords.get(keyword); // keyword = READ[INT/STRING/BOOL/DOUBLE]
+                            return;
                         } else {
-                            token.kind = keywords.get(keyword);
+                            System.out.println("An error occurred while trying to scan the file on line " + line + ", col" + col + " .");
+                            System.out.println("Read operation is invalid!");
+                            System.out.println("Missing closing bracket!");
+                            token.kind = TokenCodes.none;
+                            return;
                         }
+                    } else {
+                        System.out.println("An error occurred while trying to scan the file on line " + line + ", col" + col + " .");
+                        System.out.println("Read operation is invalid!");
+                        System.out.println("Missing opening bracket!");
+                        token.kind = TokenCodes.none;
                         return;
                     }
-                });
+                } else { // nije READ nesto
+                    token.kind = keywords.get(keyword);
+                    return;
+                }
+            }
+        }
 
-        dataTypes.keySet()
-                .forEach((dataType) -> {
-                    if (token.string.compareTo(dataType) == 0) {
-                        token.kind = dataTypes.get(dataType);
-                        return;
-                    }
-                });
+        for (String type : dataTypes.keySet()) {
+            if (token.string.compareTo(type) == 0) {
+                token.kind = dataTypes.get(type);
+                return;
+            }
+        }
         token.kind = TokenCodes.identifier_;
     }
 
-    private static void checkForCommentOrDivision(Token token, String s) {
+    private static Token checkForCommentOrDivision(Token token, String s) {
         nextCh();
         if (ch == '/') {
             nextCh();
             while (ch != eol && ch != eofCh) nextCh();
             nextCh();
-            token = null;
+            return null;
         } else if (ch == '*') {
             char prev;
             nextCh();
@@ -213,10 +214,11 @@ public class Scanner {
             } else {
                 nextCh();
             }
-            token = null;
+            return null;
         } else {
             token.kind = TokenCodes.div_;
             token.string = s;
+            return token;
         }
     }
 
@@ -272,7 +274,7 @@ public class Scanner {
                     t.kind = tokens.get(stringFromCharacter);
                     t.string = stringFromCharacter;
                 }
-                case '/' -> checkForCommentOrDivision(t, stringFromCharacter);
+                case '/' -> t = checkForCommentOrDivision(t, stringFromCharacter);
                 case '<', '>', '=', '!' -> checkForLessOrLessEqual(t, stringFromCharacter);
                 case '&' -> checkForAmpersand(t);
                 case '|' -> checkForPipe(t);

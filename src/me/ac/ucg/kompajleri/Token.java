@@ -10,7 +10,7 @@ public class Token {
     public double valForDouble;			// token value (for number and charConst)
     public String string;	// token string
 
-    public String getString() {
+    public String toString() {
         String TYPE = "";
         if(Scanner.keywords.containsValue(kind)){
             TYPE = "Keyword";
@@ -22,6 +22,8 @@ public class Token {
         }
         else
             TYPE = TokenNames.tokenNames[kind];
+//        System.out.println(string);
+//        System.out.println(TYPE);
         return string + " " + TYPE;
     }
 

@@ -6,12 +6,14 @@ import me.ac.ucg.kompajleri.constants.OperatorsConstants;
 import me.ac.ucg.kompajleri.constants.TokenCodes;
 import me.ac.ucg.kompajleri.constants.TokenValues;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class CreateHashmapsService {
 
     public static HashMap<String, Integer> createKeywordsMap() {
-        HashMap<String,Integer> keywords = new HashMap<>();
+        HashMap<String, Integer> keywords = new HashMap<>();
         keywords.put("LET", TokenCodes.let_);
         keywords.put("IN", TokenCodes.in_);
         keywords.put("END", TokenCodes.end_);
@@ -29,16 +31,18 @@ public class CreateHashmapsService {
         keywords.put("READSTRING", TokenCodes.readString_);
         return keywords;
     }
+
     public static HashMap<String, Integer> createDataTypesMap() {
-        HashMap<String,Integer> dataTypes = new HashMap<>();
+        HashMap<String, Integer> dataTypes = new HashMap<>();
         dataTypes.put(DataTypesConstants.INTEGER, TokenCodes.integer_);
         dataTypes.put(DataTypesConstants.DOUBLE, TokenCodes.double_);
         dataTypes.put(DataTypesConstants.BOOLEAN, TokenCodes.bool_);
         dataTypes.put(DataTypesConstants.STRING, TokenCodes.string_);
         return dataTypes;
     }
+
     public static HashMap<String, Integer> createTokensMap() {
-        HashMap<String,Integer> tokensMap = new HashMap<>();
+        HashMap<String, Integer> tokensMap = new HashMap<>();
         tokensMap.put("identifier", TokenCodes.identifier_);
         tokensMap.put(TokenValues.plus_, TokenCodes.plus_);
         tokensMap.put(TokenValues.minus_, TokenCodes.minus_);
@@ -62,10 +66,11 @@ public class CreateHashmapsService {
         tokensMap.put(TokenValues.rightParentheses_, TokenCodes.rightParentheses_);
         tokensMap.put(TokenValues.leftCurlyBracket_, TokenCodes.leftCurlyBracket_);
         tokensMap.put(TokenValues.rightCurlyBracket_, TokenCodes.rightCurlyBracket_);
-        return  tokensMap;
+        return tokensMap;
     }
+
     public static HashMap<String, Integer> createOperatorsMap() {
-        HashMap<String,Integer> operatorsMap = new HashMap<>();
+        HashMap<String, Integer> operatorsMap = new HashMap<>();
         operatorsMap.put(OperatorsConstants.plus_, TokenCodes.plus_);
         operatorsMap.put(OperatorsConstants.minus_, TokenCodes.minus_);
         operatorsMap.put(OperatorsConstants.mul_, TokenCodes.mul_);
@@ -83,4 +88,100 @@ public class CreateHashmapsService {
         return operatorsMap;
     }
 
+    public static HashMap<String, ArrayList<Integer>> createMapOfFirstSets() {
+        HashMap<String, ArrayList<Integer>> mapOfFirstSets = new HashMap<>();
+        mapOfFirstSets.put("Declarations",
+                new ArrayList<>(Arrays.asList(
+                        TokenCodes.integer_,
+                        TokenCodes.bool_,
+                        TokenCodes.string_,
+                        TokenCodes.double_
+                )
+                )
+        );
+        mapOfFirstSets.put("Type",
+                new ArrayList<>(Arrays.asList(
+                        TokenCodes.integer_,
+                        TokenCodes.bool_,
+                        TokenCodes.string_,
+                        TokenCodes.double_
+                )
+                )
+        );
+        mapOfFirstSets.put("CommandSequence",
+                new ArrayList<>(Arrays.asList(
+                        TokenCodes.if_,
+                        TokenCodes.while_,
+                        TokenCodes.for_,
+                        TokenCodes.break_,
+                        TokenCodes.print_,
+                        TokenCodes.identifier_,
+                        TokenCodes.integerConstant_,
+                        TokenCodes.boolConstant_,
+                        TokenCodes.stringConstant_,
+                        TokenCodes.doubleConstant_,
+                        TokenCodes.leftParentheses_,
+                        TokenCodes.readInteger_,
+                        TokenCodes.readString_,
+                        TokenCodes.readDouble_,
+                        TokenCodes.readBoolean_
+                )
+                )
+        );
+        mapOfFirstSets.put("ExprNum_2",
+                new ArrayList<>(Arrays.asList(
+                        TokenCodes.identifier_,
+                        TokenCodes.integerConstant_,
+                        TokenCodes.boolConstant_,
+                        TokenCodes.stringConstant_,
+                        TokenCodes.doubleConstant_,
+                        TokenCodes.leftParentheses_,
+                        TokenCodes.readInteger_,
+                        TokenCodes.readString_,
+                        TokenCodes.readDouble_,
+                        TokenCodes.readBoolean_
+                )
+                )
+        );
+        mapOfFirstSets.put("LogOp", new ArrayList<>(Arrays.asList(TokenCodes.and_, TokenCodes.or_)));
+
+        mapOfFirstSets.put("EqualityOp", new ArrayList<>(Arrays.asList(TokenCodes.equal_, TokenCodes.notEqual_)));
+
+        mapOfFirstSets.put("ComparisonOp",
+                new ArrayList<>(Arrays.asList(
+                        TokenCodes.less_,
+                        TokenCodes.lessOrEqual_,
+                        TokenCodes.greater_,
+                        TokenCodes.greaterOrEqual_
+                )
+                )
+        );
+        mapOfFirstSets.put("ADD", new ArrayList<>(Arrays.asList(TokenCodes.plus_, TokenCodes.minus_)));
+
+        mapOfFirstSets.put("MUL", new ArrayList<>(Arrays.asList(TokenCodes.mul_, TokenCodes.div_, TokenCodes.mod_)));
+
+        mapOfFirstSets.put("NegationOp", new ArrayList<>(Arrays.asList(TokenCodes.not_, TokenCodes.minus_)));
+
+        mapOfFirstSets.put("Const",
+                new ArrayList<>(Arrays.asList(
+                        TokenCodes.integerConstant_,
+                        TokenCodes.boolConstant_,
+                        TokenCodes.stringConstant_,
+                        TokenCodes.doubleConstant_
+                )
+                )
+        );
+
+        mapOfFirstSets.put("ReadOperations",
+                new ArrayList<>(Arrays.asList(
+                        TokenCodes.readInteger_,
+                        TokenCodes.readString_,
+                        TokenCodes.readBoolean_,
+                        TokenCodes.readDouble_
+                )
+                )
+        );
+
+        return mapOfFirstSets;
+    }
 }

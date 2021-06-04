@@ -2,11 +2,12 @@ LET
    integer i;
    integer n;
    integer r;
-IN
+IN {
   p = READINT();
   q = READINT();
   r = READINT();
   n = p + q;
   n = n * r;
   PRINT(n);
+  }
 END

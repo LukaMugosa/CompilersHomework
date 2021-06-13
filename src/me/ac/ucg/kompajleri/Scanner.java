@@ -142,6 +142,10 @@ public class Scanner {
             token.string = token.string.concat(Character.toString(ch));
             nextCh();
         }
+        if(token.string.compareTo("DO") == 0) {
+            token.kind = TokenCodes.doWhile_;
+            return;
+        }
         if (
                 token.string.compareTo("true") == 0 ||
                 token.string.compareTo("false") == 0

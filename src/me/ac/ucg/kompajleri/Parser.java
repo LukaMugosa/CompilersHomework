@@ -90,6 +90,7 @@ public class Parser {
             case "BREAK" -> System.out.println(generatingTabs(numberOfTabs) + statement.getKind());
             case "PRINT" -> printPrintingStatement((PrintStatement) statement, numberOfTabs);
             case "ASSIGN" -> printAssignmentExpression((AssignmentExpression) statement, numberOfTabs);
+            case "DO" -> printDoStatement((DoWhileStatement) statement, numberOfTabs);
             case "BINARY", "UNARY" -> printExpr((Expr2) statement, numberOfTabs);
         }
 
@@ -102,6 +103,14 @@ public class Parser {
         printExpr(statement.getExpr2(), numberOfTabs + 2);
         printCommandSequences(statement.getCommandSequence(), numberOfTabs + 2);
         printEndIfStatement(statement.getIfStmtEnd(), numberOfTabs);
+    }
+
+    private static void printDoStatement(DoWhileStatement doWhileStatement, Integer numberOfTabs) {
+        String tabs = generatingTabs(numberOfTabs);
+        System.out.println("Do while statement: ");
+        printCommandSequences(doWhileStatement.getCommandSequence(), numberOfTabs);
+        System.out.println(tabs + "Expression: ");
+        printExpr(doWhileStatement.getExpr2(), numberOfTabs);
     }
 
     private static void printEndIfStatement(IfStatementEnd ifStatementEnd, Integer numberOfTabs) {
@@ -278,10 +287,28 @@ public class Parser {
             Expr2 expr2 = ExprNum_2();
             check(TokenCodes.semicolon_);
             return expr2;
-        } else {
+        }
+        else if(sym == TokenCodes.doWhile_) {
+            DoWhileStatement doWhileStatement = DoWhileStatement();
+            check(TokenCodes.semicolon_);
+            return doWhileStatement;
+        }
+        else {
             error("Statement error");
             return null;
         }
+    }
+
+    private static DoWhileStatement DoWhileStatement() {
+        check(TokenCodes.doWhile_);
+        CommandSequence commandSequence = CommandSequence();
+        check(TokenCodes.while_);
+        check(TokenCodes.leftParentheses_);
+        Expr2 expr2 = ExprNum_2();
+        check(TokenCodes.rightParentheses_);
+        DoWhileStatement doWhileStatement = new DoWhileStatement(expr2, commandSequence);
+        doWhileStatement.setKind("DO");
+        return doWhileStatement;
     }
 
     private static IfStatement IfStmt() {

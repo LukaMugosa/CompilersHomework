@@ -1,0 +1,28 @@
+LET
+ /*
+        Program koji stampa sumu cifara broja n
+ */
+
+ //        KOMENTAR U JEDNOJ LINIJI
+ integer sum ;
+
+ integer n;
+ integer a;
+ integer digit;
+IN{
+
+    digit = 0;
+    sum = 0;
+    DO {
+        a = a +1 ;
+        a = a + 2;
+    } WHILE (a < 20);
+    n = READINT();
+    WHILE( n > 0){
+        digit = n%10;
+        sum = sum + digit;
+        n = n/10;
+    }
+    PRINT(sum);
+}
+END

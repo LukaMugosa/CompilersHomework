@@ -8,6 +8,7 @@ import me.ac.ucg.kompajleri.constants.TokenValues;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 
 public class CreateHashmapsService {
@@ -29,6 +30,7 @@ public class CreateHashmapsService {
         keywords.put("READDOUBLE", TokenCodes.readDouble_);
         keywords.put("READBOOL", TokenCodes.readBoolean_);
         keywords.put("READSTRING", TokenCodes.readString_);
+        keywords.put("DO", TokenCodes.doWhile_);
         return keywords;
     }
 
@@ -111,6 +113,7 @@ public class CreateHashmapsService {
         mapOfFirstSets.put("CommandSequence",
                 new ArrayList<>(Arrays.asList(
                         TokenCodes.if_,
+                        TokenCodes.doWhile_,
                         TokenCodes.while_,
                         TokenCodes.for_,
                         TokenCodes.break_,
@@ -181,6 +184,7 @@ public class CreateHashmapsService {
                 )
                 )
         );
+        mapOfFirstSets.put("DO", new ArrayList<>(Collections.singletonList(TokenCodes.doWhile_)));
 
         return mapOfFirstSets;
     }

@@ -5,7 +5,7 @@ Type		    -> integer |  bool | string | double
 
 CommandSequence	-> { Stmt+ }
 Stmt		    -> IfStmt  | WhileStmt |  ForStmt |
-                   BreakStmt  | PrintStmt | AssignmentExpr ; | ExprNum_2 ;
+                   BreakStmt  | PrintStmt | AssignmentExpr ; | ExprNum_2 ; | DoWhile ;
 
 IfStmt		    -> IF ( ExprNum_2 ) CommandSequence IfStmtEnd
 IfStmtEnd	    -> ELSE CommandSequence FI | FI
@@ -13,6 +13,7 @@ WhileStmt       -> WHILE ( ExprNum_2 ) CommandSequence
 ForStmt		    -> FOR ( AssignmentExpr ; ExprNum_2 ; AssignmentExpr ) CommandSequence
 BreakStmt	    -> BREAK ;
 PrintStmt	    -> PRINT (ExprNum_2) ;
+DoWhile         -> DO CommandSequence WHILE ( ExprNum_2 )
 
 AssignmentExpr	-> ident = ExprNum_2
 

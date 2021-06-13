@@ -29,6 +29,8 @@ public class CreateHashmapsService {
         keywords.put("READDOUBLE", TokenCodes.readDouble_);
         keywords.put("READBOOL", TokenCodes.readBoolean_);
         keywords.put("READSTRING", TokenCodes.readString_);
+        keywords.put("REPEAT", TokenCodes.repeat_);
+        keywords.put("UNTIL", TokenCodes.until_);
         return keywords;
     }
 
@@ -111,6 +113,7 @@ public class CreateHashmapsService {
         mapOfFirstSets.put("CommandSequence",
                 new ArrayList<>(Arrays.asList(
                         TokenCodes.if_,
+                        TokenCodes.repeat_,
                         TokenCodes.while_,
                         TokenCodes.for_,
                         TokenCodes.break_,
@@ -181,6 +184,8 @@ public class CreateHashmapsService {
                 )
                 )
         );
+
+        mapOfFirstSets.put("Repeat", new ArrayList<>(Arrays.asList(TokenCodes.repeat_)));
 
         return mapOfFirstSets;
     }

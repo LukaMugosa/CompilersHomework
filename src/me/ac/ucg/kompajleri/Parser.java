@@ -91,6 +91,7 @@ public class Parser {
             case "PRINT" -> printPrintingStatement((PrintStatement) statement, numberOfTabs);
             case "ASSIGN" -> printAssignmentExpression((AssignmentExpression) statement, numberOfTabs);
             case "BINARY", "UNARY" -> printExpr((Expr2) statement, numberOfTabs);
+            case "REPEAT" -> printRepeatStmt((RepeatStatement) statement, numberOfTabs);
         }
 
     }
@@ -134,6 +135,14 @@ public class Parser {
         printExpr(forStatement.getExpr2(), numberOfTabs + 2);
         printAssignmentExpression(forStatement.getAssignExprRight(), numberOfTabs + 1);
         printCommandSequences(forStatement.getCommandSequence(), numberOfTabs + 2);
+    }
+
+    private static void printRepeatStmt(RepeatStatement repeatStatement, Integer numberOfTabs) {
+        String tabs = generatingTabs(numberOfTabs);
+        System.out.println("Repeat statement: ");
+        printCommandSequences(repeatStatement.getCommandSequence(), numberOfTabs);
+        System.out.println(tabs + "Expression: ");
+        printExpr(repeatStatement.getExpr2(), numberOfTabs);
     }
 
     private static void printPrintingStatement(PrintStatement printStatement, Integer numberOfTabs) {
@@ -278,7 +287,13 @@ public class Parser {
             Expr2 expr2 = ExprNum_2();
             check(TokenCodes.semicolon_);
             return expr2;
-        } else {
+        }
+        else if(sym == TokenCodes.repeat_) {
+            RepeatStatement repeatStatement = RepeatStmt();
+            check(TokenCodes.semicolon_);
+            return repeatStatement;
+        }
+        else {
             error("Statement error");
             return null;
         }
@@ -343,6 +358,18 @@ public class Parser {
         Statement statement = new Statement();
         statement.setKind("BREAK");
         return statement;
+    }
+
+    private static RepeatStatement RepeatStmt() {
+        check(TokenCodes.repeat_);
+        CommandSequence commandSequence = CommandSequence();
+        check(TokenCodes.until_);
+        check(TokenCodes.leftParentheses_);
+        Expr2 expr2 = ExprNum_2();
+        check(TokenCodes.rightParentheses_);
+        RepeatStatement repeatStatement = new RepeatStatement(expr2, commandSequence);
+        repeatStatement.setKind("REPEAT");
+        return repeatStatement;
     }
 
     private static PrintStatement PrintStmt() {

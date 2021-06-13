@@ -50,7 +50,9 @@ public class TokenNames {
             "StringConstant",
             "boolConstant",
             "LeftCurlyBracket",
-            "RightCurlyBracket"
+            "RightCurlyBracket",
+            "Repeat",
+            "Until"
     };
 
 }

@@ -142,6 +142,16 @@ public class Scanner {
             token.string = token.string.concat(Character.toString(ch));
             nextCh();
         }
+
+        if(token.string.compareTo("REPEAT") == 0) {
+            token.kind = TokenCodes.repeat_;
+            return;
+        }
+        if(token.string.compareTo("UNTIL") == 0) {
+            token.kind = TokenCodes.until_;
+            return;
+        }
+
         if (
                 token.string.compareTo("true") == 0 ||
                 token.string.compareTo("false") == 0

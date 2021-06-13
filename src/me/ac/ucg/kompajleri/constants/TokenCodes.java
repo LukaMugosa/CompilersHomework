@@ -50,6 +50,8 @@ public class TokenCodes {
             stringConstant_ = 44,
             boolConstant_ = 45,
             leftCurlyBracket_ = 46,
-            rightCurlyBracket_ = 47;
+            rightCurlyBracket_ = 47,
+            repeat_ = 48,
+            until_ = 49;
 
 }

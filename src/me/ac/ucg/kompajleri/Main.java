@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 public class Main {
 
     public static void main(String[] args) {
-        String source = "C:\\Users\\Kolrisnik\\Desktop\\PMF\\Kompajleri\\PrviDomaciZadatak\\src\\me\\ac\\ucg\\kompajleri\\test1.txt";
+        String source = "C:\\Users\\Kolrisnik\\Desktop\\PMF\\Kompajleri\\PrviDomaciZadatak\\src\\me\\ac\\ucg\\kompajleri\\testRepeatUntil.txt";
         System.out.println(source);
         try {
             Scanner.init(new InputStreamReader(new FileInputStream(source)));

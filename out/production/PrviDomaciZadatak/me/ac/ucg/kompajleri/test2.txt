@@ -1,9 +1,10 @@
 LET
     integer n;
     integer x;
-IN
+IN {
     n = READINT();
     IF (n < 10) THEN x = 1; ELSE x = 10; FI
     PRINT(n);
     PRINT(x);
+}
 END

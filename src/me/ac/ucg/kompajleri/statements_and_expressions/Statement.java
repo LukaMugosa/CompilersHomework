@@ -11,4 +11,11 @@ public class Statement {
     public void setKind(String kind) {
         this.kind = kind;
     }
+
+    @Override
+    public String toString() {
+        return "Statement{" +
+                "kind='" + kind + '\'' +
+                '}';
+    }
 }

@@ -78,6 +78,7 @@ public class Parser {
     }
 
     private static void printStatement(Statement statement, Integer numberOfTabs) {
+        System.out.println(statement);
         if (statement == null) {
             System.out.println(generatingTabs(numberOfTabs) + " ----- Found null statement");
             return;
@@ -104,16 +105,17 @@ public class Parser {
     }
 
     private static void printEndIfStatement(IfStatementEnd ifStatementEnd, Integer numberOfTabs) {
+        System.out.println(ifStatementEnd);
         if (ifStatementEnd == null) {
             System.out.println(generatingTabs(numberOfTabs) + " Found null end if statement");
             return;
         }
         String tabs = generatingTabs(numberOfTabs);
         if (ifStatementEnd.getCommandSequence() != null) {
-            System.out.println("ELSE statement");
+            System.out.println(tabs + "ELSE statement");
             printCommandSequences(ifStatementEnd.getCommandSequence(), numberOfTabs + 2);
         } else {
-            System.out.println("END IF statement");
+            System.out.println(tabs + "END IF statement");
         }
     }
 
@@ -127,10 +129,10 @@ public class Parser {
     private static void printForStatement(ForStatement forStatement, Integer numberOfTabs) {
         String tabs = generatingTabs(numberOfTabs);
         System.out.println(tabs + forStatement.getKind());
-        printAssignmentExpression(forStatement.getAssignExprLeft(), numberOfTabs + 2);
+        printAssignmentExpression(forStatement.getAssignExprLeft(), numberOfTabs + 1);
         System.out.println(tabs + " Expression: ");
         printExpr(forStatement.getExpr2(), numberOfTabs + 2);
-        printAssignmentExpression(forStatement.getAssignExprRight(), numberOfTabs + 2);
+        printAssignmentExpression(forStatement.getAssignExprRight(), numberOfTabs + 1);
         printCommandSequences(forStatement.getCommandSequence(), numberOfTabs + 2);
     }
 
@@ -138,7 +140,7 @@ public class Parser {
         String tabs = generatingTabs(numberOfTabs);
         System.out.println(tabs + printStatement.getKind());
         System.out.println(tabs + " Expression: ");
-        printExpr(printStatement.getExpr2(), numberOfTabs);
+        printExpr(printStatement.getExpr2(), numberOfTabs + 2);
     }
 
     private static void printExpr(Expr2 expression, Integer numberOfTabs) {
@@ -150,8 +152,8 @@ public class Parser {
             case "BINARY" -> printBinary(expression, numberOfTabs);
             case "UNARY" -> printUnary(expression, numberOfTabs);
             case "IntegerConstant", "DoubleConstant", "StringConstant",
-                    "BoolConstant", "IDENTIFIER", "READSTRING", "READDOUBLE",
-                    "READINTEGER", "READBOOL" -> System.out.println(generatingTabs(numberOfTabs) + expression.getKind() + ": " + expression.getValue());
+                    "boolConstant", "Identifier", "READSTRING", "READDOUBLE",
+                    "READINT", "READBOOL" -> System.out.println(generatingTabs(numberOfTabs) + expression.getKind() + ": " + expression.getValue());
         }
     }
 
@@ -203,7 +205,10 @@ public class Parser {
             declarations[cnt++] = Decl();
         }
         Declaration[] finalDecl = new Declaration[cnt];
-        System.arraycopy(declarations, 0, finalDecl, 0, cnt);
+        for (int i = 0; i < cnt; i++) {
+            finalDecl[i] = declarations[i];
+        }
+//        System.arraycopy(declarations, 0, finalDecl, 0, cnt);
         return finalDecl;
     }
 
@@ -251,7 +256,7 @@ public class Parser {
         Statement[] finalStmt = new Statement[cnt];
         System.arraycopy(statements, 0, finalStmt, 0, cnt);
         check(TokenCodes.rightCurlyBracket_);
-        return new CommandSequence(statements);
+        return new CommandSequence(finalStmt);
     }
 
     private static Statement Stmt() {
@@ -357,7 +362,7 @@ public class Parser {
         check(TokenCodes.assign_);
         Expr2 expr2 = ExprNum_2();
         AssignmentExpression assignmentExpression = new AssignmentExpression(id, expr2);
-        assignmentExpression.setKind("ASSIGN");
+        assignmentExpression.setKind("Assign");
         if(mapOfSymbols.containsKey(id)){
             mapOfSymbols.get(id).setExpr2(expr2);
         }else{
@@ -441,12 +446,6 @@ public class Parser {
     private static Expr2 ExprNum_6Prim(Expr2 expr7) {
         if (mapOfFirstSets.get("MUL").contains(sym)) {
             String op = "";
-            if (sym == TokenCodes.mul_)
-                op = "*";
-            else if (sym == TokenCodes.div_)
-                op = "/";
-            else if (sym == TokenCodes.mod_)
-                op = "%";
             switch (sym){
                 case TokenCodes.mul_ -> op = "*";
                 case TokenCodes.div_ -> op = "/";
@@ -472,22 +471,6 @@ public class Parser {
     }
 
     private static Expr2 ExprNum_8() {
-        if (mapOfFirstSets.get("Const").contains(sym)) {
-            String type = "";
-            scan();
-        } else if (sym == TokenCodes.identifier_)
-            scan();
-        else if (sym == TokenCodes.leftParentheses_) {
-            scan();
-            ExprNum_2();
-            check(TokenCodes.rightParentheses_);
-        } else if (mapOfFirstSets.get("ReadOperations").contains(sym)) {
-            scan();
-        } else {
-            error("Expression expected");
-            scan();
-        }
-
         if (mapOfFirstSets.get("Const").contains(sym)) {
             String type = "";
             Expr2 expr = new Expr2("", null, null, null);
@@ -517,7 +500,7 @@ public class Parser {
             if(!mapOfSymbols.containsKey(identifier)){
                 error("Missing identifier declaration " + identifier);
             }
-            Expr2 expr = new Expr2("", null, null, "IDENTIFIER");
+            Expr2 expr = new Expr2("", null, null, "Identifier");
             expr.setValue(identifier);
             return expr;
         } else if (sym == TokenCodes.leftParentheses_) {
@@ -535,7 +518,7 @@ public class Parser {
             else if (sym == TokenCodes.readDouble_)
                 type = "READDOUBLE";
             else if (sym == TokenCodes.readInteger_)
-                type = "READINTEGER";
+                type = "READINT";
             expr.setValue(la.string);
             scan();
             expr.setKind(type);
